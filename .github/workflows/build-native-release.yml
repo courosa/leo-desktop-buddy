@@ -1,0 +1,35 @@
+name: Build native Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "native/**"
+      - "assets/sprites/leo-walk-v2.png"
+      - "assets/sprites/leo-fight.png"
+      - ".github/workflows/build-native-release.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - run: msbuild native/LeoDesktopBuddy.csproj /restore /p:Configuration=Release
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.1.0
+          name: Leo Desktop Buddy v1.1.0 — Native Windows build
+          make_latest: true
+          body: |
+            Native Windows build with no bundled Python interpreter or
+            third-party runtime. This replaces the PyInstaller-based v1.0.0.
+
+            Download `LeoDesktopBuddy.exe`, double-click it to start, and use
+            the blue system-tray icon to exit.
+          files: native/bin/Release/net48/LeoDesktopBuddy.exe
+
