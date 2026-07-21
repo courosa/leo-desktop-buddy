@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>LeoDesktopBuddy</AssemblyName>
+    <RootNamespace>LeoDesktopBuddy</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\assets\sprites\leo-walk-v2.png">
+      <Link>assets\sprites\leo-walk-v2.png</Link>
+      <LogicalName>LeoDesktopBuddy.assets.sprites.leo-walk-v2.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\assets\sprites\leo-fight.png">
+      <Link>assets\sprites\leo-fight.png</Link>
+      <LogicalName>LeoDesktopBuddy.assets.sprites.leo-fight.png</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
