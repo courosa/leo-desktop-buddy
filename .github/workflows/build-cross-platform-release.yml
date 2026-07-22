@@ -1,0 +1,59 @@
+name: Build Windows and macOS release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "mac/**"
+      - ".github/workflows/build-cross-platform-release.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - run: msbuild native/LeoDesktopBuddy.csproj /restore /p:Configuration=Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: native/bin/Release/net48/LeoDesktopBuddy.exe
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: chmod +x mac/build-mac.sh && mac/build-mac.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: mac/build/LeoDesktopBuddy-macOS.zip
+
+  release:
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-files
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.2.0
+          name: Leo Desktop Buddy v1.2.0 — Windows and Mac
+          make_latest: true
+          body: |
+            Leo now follows and playfully fights the mouse on both Windows and macOS.
+
+            - Windows: download `LeoDesktopBuddy.exe`.
+            - Mac: download and unzip `LeoDesktopBuddy-macOS.zip`, then open
+              `Leo Desktop Buddy.app`. The first time, Control-click the app and
+              choose Open because this personal build is ad-hoc signed, not notarized.
+          files: |
+            release-files/LeoDesktopBuddy.exe
+            release-files/LeoDesktopBuddy-macOS.zip
+
